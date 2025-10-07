@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using BarnCaseApi;
 
 namespace BarnCaseApi
 {
@@ -15,32 +16,31 @@ namespace BarnCaseApi
         {
             InitializeComponent();
 
-            // TextBox uzunlukları
-            textBox1.MaxLength = 50; // Username
-            textBox2.MaxLength = 100; // Email
-            textBox3.MaxLength = 50; // Password
-            textBox4.MaxLength = 50; // RePassword
+            textBox1.MaxLength = 50; 
+            textBox2.MaxLength = 100;
+            textBox3.MaxLength = 50; 
+            textBox4.MaxLength = 50; 
 
-            // Password gizleme
+         
             textBox3.UseSystemPasswordChar = true;
             textBox4.UseSystemPasswordChar = true;
 
-            // Label gizleme
+            
             lblError.Visible = false;
             lblErrorPassword.Visible = false;
 
-            // TextChanged eventleri
+            
             textBox2.TextChanged += TextBoxes_TextChanged;
             textBox3.TextChanged += TextBoxes_TextChanged;
             textBox4.TextChanged += TextBoxes_TextChanged;
 
-            // KeyPress eventleri
+
             textBox1.KeyPress += OnlyLetters_KeyPress;
             textBox2.KeyPress += NoWhitespace_KeyPress;
             textBox3.KeyPress += NoWhitespace_KeyPress;
             textBox4.KeyPress += NoWhitespace_KeyPress;
 
-            // ShowPassword event
+            
             ShowPassword.CheckedChanged += ShowPassword_CheckedChanged;
         }
 
@@ -106,8 +106,8 @@ namespace BarnCaseApi
                 lblErrorPassword.Visible = false;
             }
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        
+        private void Button1_Click(object sender, EventArgs e)
         {
 
             ValidateAll();
@@ -159,5 +159,7 @@ namespace BarnCaseApi
          
             }
         }
+
+      
     }
 }

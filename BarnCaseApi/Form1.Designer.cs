@@ -45,7 +45,7 @@
             // textBox2
             // 
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Location = new System.Drawing.Point(210, 157);
+            this.textBox2.Location = new System.Drawing.Point(199, 158);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(276, 26);
             this.textBox2.TabIndex = 2;
@@ -53,7 +53,7 @@
             // textBox3
             // 
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Location = new System.Drawing.Point(210, 225);
+            this.textBox3.Location = new System.Drawing.Point(199, 226);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(276, 26);
             this.textBox3.TabIndex = 3;
@@ -61,7 +61,7 @@
             // textBox4
             // 
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Location = new System.Drawing.Point(210, 290);
+            this.textBox4.Location = new System.Drawing.Point(199, 290);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(276, 26);
             this.textBox4.TabIndex = 4;
@@ -69,7 +69,7 @@
             // textBox1
             // 
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Location = new System.Drawing.Point(210, 95);
+            this.textBox1.Location = new System.Drawing.Point(199, 96);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(276, 26);
             this.textBox1.TabIndex = 5;
@@ -77,16 +77,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(206, 72);
+            this.label1.Location = new System.Drawing.Point(195, 73);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(120, 20);
+            this.label1.Size = new System.Drawing.Size(83, 20);
             this.label1.TabIndex = 6;
-            this.label1.Text = "Name Surname";
+            this.label1.Text = "Username";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(206, 133);
+            this.label2.Location = new System.Drawing.Point(195, 133);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 20);
             this.label2.TabIndex = 8;
@@ -95,7 +95,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(206, 202);
+            this.label3.Location = new System.Drawing.Point(195, 203);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(78, 20);
             this.label3.TabIndex = 9;
@@ -104,7 +104,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(206, 267);
+            this.label4.Location = new System.Drawing.Point(195, 269);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(98, 20);
             this.label4.TabIndex = 10;
@@ -113,7 +113,7 @@
             // ShowPassword
             // 
             this.ShowPassword.AutoSize = true;
-            this.ShowPassword.Location = new System.Drawing.Point(497, 263);
+            this.ShowPassword.Location = new System.Drawing.Point(485, 264);
             this.ShowPassword.Name = "ShowPassword";
             this.ShowPassword.Size = new System.Drawing.Size(148, 24);
             this.ShowPassword.TabIndex = 11;
@@ -124,18 +124,18 @@
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(275, 332);
+            this.button1.Location = new System.Drawing.Point(263, 333);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(128, 40);
             this.button1.TabIndex = 12;
             this.button1.Text = "Sign Up";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // lblError
             // 
             this.lblError.AutoSize = true;
-            this.lblError.Location = new System.Drawing.Point(236, 425);
+            this.lblError.Location = new System.Drawing.Point(249, 413);
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(44, 20);
             this.lblError.TabIndex = 13;
@@ -145,7 +145,7 @@
             // lblErrorPassword
             // 
             this.lblErrorPassword.AutoSize = true;
-            this.lblErrorPassword.Location = new System.Drawing.Point(75, 393);
+            this.lblErrorPassword.Location = new System.Drawing.Point(75, 392);
             this.lblErrorPassword.Name = "lblErrorPassword";
             this.lblErrorPassword.Size = new System.Drawing.Size(110, 20);
             this.lblErrorPassword.TabIndex = 14;
@@ -156,7 +156,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(735, 497);
+            this.ClientSize = new System.Drawing.Size(716, 459);
             this.Controls.Add(this.lblErrorPassword);
             this.Controls.Add(this.lblError);
             this.Controls.Add(this.button1);

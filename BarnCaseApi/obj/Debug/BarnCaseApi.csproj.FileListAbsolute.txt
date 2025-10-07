@@ -9,3 +9,4 @@ C:\Users\ALİ\Source\Repos\BarnCaseApi\BarnCaseApi\obj\Debug\BarnCaseApi.csproj.
 C:\Users\ALİ\Source\Repos\BarnCaseApi\BarnCaseApi\obj\Debug\BarnCaseApi.exe
 C:\Users\ALİ\Source\Repos\BarnCaseApi\BarnCaseApi\obj\Debug\BarnCaseApi.pdb
 C:\Users\ALİ\Source\Repos\BarnCaseApi\BarnCaseApi\obj\Debug\BarnCaseApi.Form2.resources
+C:\Users\ALİ\Source\Repos\BarnCaseApi\BarnCaseApi\obj\Debug\BarnCaseApi.Form3.resources
