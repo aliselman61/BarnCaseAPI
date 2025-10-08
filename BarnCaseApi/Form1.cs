@@ -160,6 +160,13 @@ namespace BarnCaseApi
             }
         }
 
-      
+        private void picToLogin_Click(object sender, EventArgs e)
+        {
+            
+            Form2 loginForm = new Form2();
+            loginForm.Show();
+            this.Hide();
+        }
+
     }
 }
