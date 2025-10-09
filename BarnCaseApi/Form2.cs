@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace BarnCaseApi
@@ -21,14 +23,13 @@ namespace BarnCaseApi
             lblRegister.Cursor = Cursors.Hand;
             lblRegister.Font = new Font(lblRegister.Font, FontStyle.Underline);
 
-          
             lblRegister.Click += lblRegister_Click;
         }
 
         private void ButtonLogin_Click(object sender, EventArgs e)
         {
             string username = textBox1.Text.Trim();
-            string password = textBox2.Text.Trim();
+            string password = textBox2.Text;
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
@@ -39,24 +40,29 @@ namespace BarnCaseApi
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand("SELECT PasswordHash, PasswordSalt, Iterations FROM dbo.Hash WHERE Username = @Username", conn))
                 {
+                    cmd.Parameters.Add(new SqlParameter("@Username", SqlDbType.NVarChar, 40) { Value = username });
                     conn.Open();
 
-                  
-                    string query = "SELECT COUNT(*) FROM Users WHERE Username = @Username AND Password = @Password";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlDataReader rdr = cmd.ExecuteReader(CommandBehavior.SingleRow))
                     {
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        cmd.Parameters.AddWithValue("@Password", password);
+                        if (!rdr.Read())
+                        {
+                            MessageBox.Show("Username or password is incorrect.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
 
-                        int userCount = (int)cmd.ExecuteScalar();
+                        byte[] storedHash = (byte[])rdr["PasswordHash"];
+                        byte[] storedSalt = (byte[])rdr["PasswordSalt"];
+                        int iterations = (int)rdr["Iterations"];
 
-                        if (userCount > 0)
+                        bool verified = VerifyPBKDF2(password, storedSalt, iterations, storedHash);
+
+                        if (verified)
                         {
                             MessageBox.Show($"Login successful! Welcome {username}.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            
                             Form3 form3 = new Form3();
                             form3.Show();
                             this.Hide();
@@ -89,5 +95,27 @@ namespace BarnCaseApi
         {
             textBox2.UseSystemPasswordChar = !checkBox1.Checked;
         }
+
+        #region PBKDF2 Verification
+        private bool VerifyPBKDF2(string password, byte[] salt, int iterations, byte[] expectedHash)
+        {
+            using (var pbk = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+            {
+                byte[] computedHash = pbk.GetBytes(expectedHash.Length);
+                return ByteArrayEquals(computedHash, expectedHash);
+            }
+        }
+
+        private bool ByteArrayEquals(byte[] a, byte[] b)
+        {
+            if (a == null || b == null) return false;
+            if (a.Length != b.Length) return false;
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] != b[i]) return false;
+            }
+            return true;
+        }
+        #endregion
     }
 }

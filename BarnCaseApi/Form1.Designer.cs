@@ -72,7 +72,7 @@
             // textBox4
             // 
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Location = new System.Drawing.Point(199, 290);
+            this.textBox4.Location = new System.Drawing.Point(199, 289);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(276, 26);
             this.textBox4.TabIndex = 4;

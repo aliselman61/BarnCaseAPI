@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-using BarnCaseApi;
+using System.Security.Cryptography;
 
 namespace BarnCaseApi
 {
@@ -11,36 +11,30 @@ namespace BarnCaseApi
     {
         private string connectionString = @"Data Source=ALI;Initial Catalog=BarnCaseDB;Integrated Security=True";
 
-
         public Form1()
         {
             InitializeComponent();
 
-            textBox1.MaxLength = 50; 
+            textBox1.MaxLength = 40;
             textBox2.MaxLength = 100;
-            textBox3.MaxLength = 50; 
-            textBox4.MaxLength = 50; 
+            textBox3.MaxLength = 50;
+            textBox4.MaxLength = 50;
 
-         
             textBox3.UseSystemPasswordChar = true;
             textBox4.UseSystemPasswordChar = true;
 
-            
             lblError.Visible = false;
             lblErrorPassword.Visible = false;
 
-            
             textBox2.TextChanged += TextBoxes_TextChanged;
             textBox3.TextChanged += TextBoxes_TextChanged;
             textBox4.TextChanged += TextBoxes_TextChanged;
-
 
             textBox1.KeyPress += OnlyLetters_KeyPress;
             textBox2.KeyPress += NoWhitespace_KeyPress;
             textBox3.KeyPress += NoWhitespace_KeyPress;
             textBox4.KeyPress += NoWhitespace_KeyPress;
 
-            
             ShowPassword.CheckedChanged += ShowPassword_CheckedChanged;
         }
 
@@ -106,10 +100,9 @@ namespace BarnCaseApi
                 lblErrorPassword.Visible = false;
             }
         }
-        
+
         private void Button1_Click(object sender, EventArgs e)
         {
-
             ValidateAll();
 
             if (string.IsNullOrWhiteSpace(textBox1.Text) ||
@@ -126,25 +119,34 @@ namespace BarnCaseApi
                 MessageBox.Show("Please correct the errors.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-           
+
             try
             {
+                
+                string password = textBox3.Text;
+                byte[] salt = GenerateSalt(16);
+                int iterations = 100000;
+                byte[] hash = HashPassword(password, salt, iterations);
+
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "INSERT INTO Users (Username, Email, [Password]) VALUES (@Username, @Email, @Password)";
+                    string query = @"INSERT INTO Hash (Username, Email, PasswordHash, PasswordSalt, Iterations)
+                                     VALUES (@Username, @Email, @PasswordHash, @PasswordSalt, @Iterations)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@Username", textBox1.Text);
                         cmd.Parameters.AddWithValue("@Email", textBox2.Text);
-                        cmd.Parameters.AddWithValue("@Password", textBox3.Text);
+                        cmd.Parameters.Add("@PasswordHash", System.Data.SqlDbType.VarBinary, 32).Value = hash;
+                        cmd.Parameters.Add("@PasswordSalt", System.Data.SqlDbType.VarBinary, 16).Value = salt;
+                        cmd.Parameters.AddWithValue("@Iterations", iterations);
 
                         cmd.ExecuteNonQuery();
                     }
                 }
 
-                MessageBox.Show("Registration successful!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Registration successful ", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 Form2 form2 = new Form2();
                 form2.Show();
@@ -156,17 +158,32 @@ namespace BarnCaseApi
                     MessageBox.Show("This email is already registered.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else
                     MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-         
+            }
+        }
+
+        private static byte[] GenerateSalt(int size)
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] salt = new byte[size];
+                rng.GetBytes(salt);
+                return salt;
+            }
+        }
+
+        private static byte[] HashPassword(string password, byte[] salt, int iterations)
+        {
+            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+            {
+                return pbkdf2.GetBytes(32); 
             }
         }
 
         private void picToLogin_Click(object sender, EventArgs e)
         {
-            
             Form2 loginForm = new Form2();
             loginForm.Show();
             this.Hide();
         }
-
     }
 }
