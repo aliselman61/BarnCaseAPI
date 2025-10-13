@@ -63,7 +63,9 @@ namespace BarnCaseApi
                         {
                             MessageBox.Show($"Login successful! Welcome {username}.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                            // Form3’e kullanıcı adını gönderiyoruz
                             Form3 form3 = new Form3();
+                            form3.LoggedInUsername = username;
                             form3.Show();
                             this.Hide();
                         }
