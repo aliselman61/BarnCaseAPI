@@ -7,11 +7,11 @@ using System.Windows.Forms;
 
 namespace BarnCaseApi
 {
-    public partial class Form2 : Form
+    public partial class SignIn : Form
     {
         private string connectionString = @"Data Source=ALI;Initial Catalog=BarnCaseDB;Integrated Security=True";
 
-        public Form2()
+        public SignIn()
         {
             InitializeComponent();
 
@@ -23,7 +23,7 @@ namespace BarnCaseApi
             lblRegister.Cursor = Cursors.Hand;
             lblRegister.Font = new Font(lblRegister.Font, FontStyle.Underline);
 
-            lblRegister.Click += lblRegister_Click;
+            lblRegister.Click += LblRegister_Click;
         }
 
         private void ButtonLogin_Click(object sender, EventArgs e)
@@ -63,8 +63,8 @@ namespace BarnCaseApi
                         {
                             MessageBox.Show($"Login successful! Welcome {username}.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            // Form3’e kullanıcı adını gönderiyoruz
-                            Form3 form3 = new Form3();
+                            
+                            FarmManagement form3 = new FarmManagement();
                             form3.LoggedInUsername = username;
                             form3.Show();
                             this.Hide();
@@ -86,14 +86,14 @@ namespace BarnCaseApi
             }
         }
 
-        private void lblRegister_Click(object sender, EventArgs e)
+        private void LblRegister_Click(object sender, EventArgs e)
         {
-            Form1 registerForm = new Form1();
+            SignUp registerForm = new SignUp();
             registerForm.Show();
             this.Hide();
         }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+         
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
             textBox2.UseSystemPasswordChar = !checkBox1.Checked;
         }
@@ -105,7 +105,7 @@ namespace BarnCaseApi
             {
                 byte[] computedHash = pbk.GetBytes(expectedHash.Length);
                 return ByteArrayEquals(computedHash, expectedHash);
-            }
+            }       
         }
 
         private bool ByteArrayEquals(byte[] a, byte[] b)
@@ -118,6 +118,11 @@ namespace BarnCaseApi
             }
             return true;
         }
-        #endregion
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
+#endregion

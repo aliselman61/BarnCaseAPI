@@ -7,11 +7,11 @@ using System.Security.Cryptography;
 
 namespace BarnCaseApi
 {
-    public partial class Form1 : Form
+    public partial class SignUp : Form
     {
         private string connectionString = @"Data Source=ALI;Initial Catalog=BarnCaseDB;Integrated Security=True";
 
-        public Form1()
+        public SignUp()
         {
             InitializeComponent();
 
@@ -148,7 +148,7 @@ namespace BarnCaseApi
 
                 MessageBox.Show("Registration successful ", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                Form2 form2 = new Form2();
+                SignIn form2 = new SignIn();
                 form2.Show();
                 this.Hide();
             }
@@ -179,9 +179,9 @@ namespace BarnCaseApi
             }
         }
 
-        private void picToLogin_Click(object sender, EventArgs e)
+        private void PicToLogin_Click(object sender, EventArgs e)
         {
-            Form2 loginForm = new Form2();
+            SignIn loginForm = new SignIn();
             loginForm.Show();
             this.Hide();
         }
