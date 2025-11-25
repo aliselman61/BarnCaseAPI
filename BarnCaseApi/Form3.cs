@@ -23,9 +23,11 @@ namespace BarnCaseApi
             "fell into a river",
             "caught in a storm",
             "sudden illness",
-            "choked on food",
+            "choked on food(ali ate)",
             "tripped and injured",
-            "attacked by a predator"
+            "attacked by a predator",
+            
+            
         };
 
         public FarmManagement()
@@ -36,13 +38,14 @@ namespace BarnCaseApi
             txtAge.MaxLength = 2;
             cmbType.MaxLength = 8;
             cmbGender.MaxLength = 6;
+            textBox1.MaxLength = 10;
 
             btnAddAnimal.Click += btnAddAnimal_Click;
             btnSellClick.Click += btnSellClick_Click;
         }
 
         private void FarmManagement_Load(object sender, EventArgs e)
-        {
+        { 
             if (!string.IsNullOrEmpty(LoggedInUsername))
                 label1.Text = LoggedInUsername;
 
@@ -50,7 +53,7 @@ namespace BarnCaseApi
                 cmbType.Items.AddRange(new string[] { "Cow", "Chicken", "Sheep" });
 
             if (cmbGender.Items.Count == 0)
-                cmbGender.Items.AddRange(new string[] { "Male", "Female" });
+                cmbGender.Items.AddRange(new string[] { "Female" });
 
             if (lstAnimals.View != View.Details)
             {
@@ -58,7 +61,6 @@ namespace BarnCaseApi
                 lstAnimals.FullRowSelect = true;
                 lstAnimals.GridLines = true;
             }
-
             if (lstAnimals.Columns.Count == 0)
             {
                 lstAnimals.Columns.Clear();
@@ -72,7 +74,7 @@ namespace BarnCaseApi
             UpdateBalanceLabel();
 
             agingTimer = new Timer();
-            agingTimer.Interval = 10000; 
+            agingTimer.Interval = 10000;
             agingTimer.Tick += AgingTimer_Tick;
             agingTimer.Start();
         }
@@ -105,12 +107,7 @@ namespace BarnCaseApi
 
             balance -= price;
 
-            int count = 1;
-            foreach (var a in animals)
-            {
-                if (a.Type == type)
-                    count++;
-            }
+            int count = animals.Count(a => a.Type == type) + 1;
             string name = type + "_" + count;
 
             var animal = new SimpleAnimal
@@ -146,43 +143,30 @@ namespace BarnCaseApi
 
             if (string.IsNullOrWhiteSpace(sellName))
             {
-                MessageBox.Show("Please enter the name of the animal to sell.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+               MessageBox.Show("Please enter the name of the animal to sell.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               return;
             }
 
-            SimpleAnimal animal = null;
-            foreach (var a in animals)
-            {
-                if (a.Name.Equals(sellName, StringComparison.OrdinalIgnoreCase))
-                {
-                    animal = a;
-                    break;
-                }
-            }
+            SimpleAnimal animal = animals.FirstOrDefault(a => a.Name.Equals(sellName, StringComparison.OrdinalIgnoreCase));
 
             if (animal == null)
             {
-                MessageBox.Show("No animal found with that name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+               MessageBox.Show("No animal found with that name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+               return;
             }
 
             balance += animal.Price;
             UpdateBalanceLabel();
-
             animals.Remove(animal);
 
-            ListViewItem itemToRemove = null;
             foreach (ListViewItem i in lstAnimals.Items)
             {
                 if (i.Text.Equals(animal.Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    itemToRemove = i;
+                    lstAnimals.Items.Remove(i);
                     break;
                 }
             }
-
-            if (itemToRemove != null)
-                lstAnimals.Items.Remove(itemToRemove);
 
             MessageBox.Show(animal.Name + " has been sold for " + animal.Price.ToString("C", dollarCulture),
                             "Animal Sold", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -199,26 +183,41 @@ namespace BarnCaseApi
                 a.Age++;
 
                 int maxAge = GetMaxAge(a.Type);
+                decimal basePrice = GetAnimalPrice(a.Type);
 
-              
-                decimal discountFactor = 1 - 0.5m * ((decimal)a.Age / maxAge);
-                if (discountFactor < 0.5m) discountFactor = 0.5m;
-                a.Price = GetAnimalPrice(a.Type) * discountFactor;
+                int gainLimit = 0;
 
-                
+                if (a.Type.ToLower() == "cow") gainLimit = 20;
+                else if (a.Type.ToLower() == "sheep") gainLimit = 10;
+                else if (a.Type.ToLower() == "chicken") gainLimit = 4;
+
+                decimal factor = 1.0m;
+
+                if (a.Age <= gainLimit)
+                {
+                    factor += 0.05m * a.Age;
+                }
+                else
+                {
+                    int overAge = a.Age - gainLimit;
+                    factor += 0.05m * gainLimit;
+                    factor -= 0.05m * overAge;
+
+                    if (factor < 0.5m)
+                        factor = 0.5m;
+                }
+
+                a.Price = basePrice * factor;
+
                 if (a.Age > maxAge)
                 {
                     a.DeathCause = "old age";
                     deadAnimals.Add(a);
                 }
-                else
+                else if (rnd.Next(0, 100) < 5)
                 {
-                    
-                    if (rnd.Next(0, 100) < 5)
-                    {
-                        a.DeathCause = deathCauses[rnd.Next(deathCauses.Length)];
-                        deadAnimals.Add(a);
-                    }
+                    a.DeathCause = deathCauses[rnd.Next(deathCauses.Length)];
+                    deadAnimals.Add(a);
                 }
             }
 
@@ -238,21 +237,14 @@ namespace BarnCaseApi
                 if (itemToRemove != null)
                     lstAnimals.Items.Remove(itemToRemove);
 
-                MessageBox.Show(dead.Name + " has died (" + dead.DeathCause + ").", "Animal Died", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(dead.Name + " has died (" + dead.DeathCause + ").",
+                "Animal Died", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
 
             foreach (ListViewItem item in lstAnimals.Items)
             {
-                SimpleAnimal a = null;
-                foreach (var animal in animals)
-                {
-                    if (animal.Name == item.Text)
-                    {
-                        a = animal;
-                        break;
-                    }
-                }
+                var a = animals.FirstOrDefault(an => an.Name == item.Text);
+
                 if (a != null)
                 {
                     item.SubItems[2].Text = a.Age.ToString();
@@ -263,23 +255,30 @@ namespace BarnCaseApi
 
         private decimal GetAnimalPrice(string type)
         {
-            if (type.ToLower() == "cow") return 150m;
-            if (type.ToLower() == "chicken") return 30m;
-            if (type.ToLower() == "sheep") return 120m;
+            type = type.ToLower();
+
+            if (type == "cow") return 150m;
+            if (type == "chicken") return 30m;
+            if (type == "sheep") return 100m;
+
             return 0m;
         }
 
         private int GetMaxAge(string type)
         {
-            if (type.ToLower() == "cow") return 20;
-            if (type.ToLower() == "chicken") return 5;
-            if (type.ToLower() == "sheep") return 10;
+            type = type.ToLower();
+
+            if (type == "cow") return 25;
+            if (type == "chicken") return 6;
+            if (type == "sheep") return 15;
+
             return 10;
         }
 
         private void UpdateBalanceLabel()
         {
             string balanceText = balance.ToString("C", dollarCulture);
+
             foreach (Control c in this.Controls)
             {
                 if (c is Label lbl && lbl.Name == "lblCash")
@@ -301,16 +300,29 @@ namespace BarnCaseApi
                 }
             }
         }
-
-        private class SimpleAnimal
+         
+        public class SimpleAnimal
         {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-            public string Type { get; set; }
-            public int Age { get; set; }
-            public string Gender { get; set; }
-            public decimal Price { get; set; }
-            public string DeathCause { get; set; }
+           public Guid Id { get; set; }
+           public string Name { get; set; }
+           public string Type { get; set; }
+           public int Age { get; set; }
+           public string Gender { get; set; } 
+           public decimal Price { get; set; }
+           public string DeathCause { get; set; }
+        }
+        
+        private void txtAge_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsNumber(e.KeyChar) || char.IsControl(e.KeyChar))
+            {
+                e.Handled = false;
+            }
+            else e.Handled = true;
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
         }
     }
 }

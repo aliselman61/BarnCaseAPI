@@ -194,7 +194,6 @@
             // 
             this.cmbGender.FormattingEnabled = true;
             this.cmbGender.Items.AddRange(new object[] {
-            "Male\t",
             "Female"});
             this.cmbGender.Location = new System.Drawing.Point(88, 95);
             this.cmbGender.Name = "cmbGender";
@@ -238,6 +237,7 @@
             this.txtAge.Name = "txtAge";
             this.txtAge.Size = new System.Drawing.Size(120, 26);
             this.txtAge.TabIndex = 5;
+            this.txtAge.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtAge_KeyPress);
             // 
             // lblAge
             // 
@@ -267,6 +267,7 @@
             this.textBox1.Size = new System.Drawing.Size(288, 26);
             this.textBox1.TabIndex = 6;
             this.textBox1.Text = " ";
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // lblProduct
             // 

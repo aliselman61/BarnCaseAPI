@@ -25,7 +25,6 @@ namespace BarnCaseApi
 
             lblRegister.Click += LblRegister_Click;
         }
-
         private void ButtonLogin_Click(object sender, EventArgs e)
         {
             string username = textBox1.Text.Trim();
@@ -36,7 +35,6 @@ namespace BarnCaseApi
                 MessageBox.Show("Please enter both username and password.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -63,7 +61,7 @@ namespace BarnCaseApi
                         {
                             MessageBox.Show($"Login successful! Welcome {username}.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            
+                        
                             FarmManagement form3 = new FarmManagement();
                             form3.LoggedInUsername = username;
                             form3.Show();
@@ -107,21 +105,27 @@ namespace BarnCaseApi
                 return ByteArrayEquals(computedHash, expectedHash);
             }       
         }
-
         private bool ByteArrayEquals(byte[] a, byte[] b)
         {
             if (a == null || b == null) return false;
             if (a.Length != b.Length) return false;
             for (int i = 0; i < a.Length; i++)
             {
-                if (a[i] != b[i]) return false;
+               if (a[i] != b[i]) return false;
             }
             return true;
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-
+            if (char.IsLetter(e.KeyChar) || char.IsControl(e.KeyChar))
+            {
+                e.Handled = false;
+            }
+            else
+            {
+                e.Handled = true;
+            }
         }
     }
 }

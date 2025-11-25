@@ -37,7 +37,7 @@ namespace BarnCaseApi
 
             ShowPassword.CheckedChanged += ShowPassword_CheckedChanged;
         }
-
+ 
         private void ShowPassword_CheckedChanged(object sender, EventArgs e)
         {
             bool show = ShowPassword.Checked;
@@ -49,7 +49,6 @@ namespace BarnCaseApi
         {
             ValidateAll();
         }
-
         private void OnlyLetters_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
@@ -100,7 +99,6 @@ namespace BarnCaseApi
                 lblErrorPassword.Visible = false;
             }
         }
-
         private void Button1_Click(object sender, EventArgs e)
         {
             ValidateAll();
@@ -113,16 +111,13 @@ namespace BarnCaseApi
                 MessageBox.Show("Please fill in all fields.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             if (!string.IsNullOrEmpty(lblError.Text) || !string.IsNullOrEmpty(lblErrorPassword.Text))
             {
                 MessageBox.Show("Please correct the errors.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            try
-            {
-                
+            try 
+            {               
                 string password = textBox3.Text;
                 byte[] salt = GenerateSalt(16);
                 int iterations = 100000;
@@ -160,7 +155,6 @@ namespace BarnCaseApi
                     MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private static byte[] GenerateSalt(int size)
         {
             using (var rng = new RNGCryptoServiceProvider())
