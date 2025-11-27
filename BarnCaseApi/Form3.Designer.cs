@@ -52,13 +52,16 @@
             this.btnSellClick = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lblProduct = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelHeader.SuspendLayout();
             this.grpAnimals.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panelHeader
             // 
+            this.panelHeader.Controls.Add(this.pictureBox1);
             this.panelHeader.Controls.Add(this.lblCash);
             this.panelHeader.Controls.Add(this.lblTitle);
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -237,7 +240,6 @@
             this.txtAge.Name = "txtAge";
             this.txtAge.Size = new System.Drawing.Size(120, 26);
             this.txtAge.TabIndex = 5;
-            this.txtAge.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtAge_KeyPress);
             // 
             // lblAge
             // 
@@ -251,7 +253,7 @@
             // btnSellClick
             // 
             this.btnSellClick.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSellClick.Location = new System.Drawing.Point(826, 418);
+            this.btnSellClick.Location = new System.Drawing.Point(804, 414);
             this.btnSellClick.Name = "btnSellClick";
             this.btnSellClick.Size = new System.Drawing.Size(110, 36);
             this.btnSellClick.TabIndex = 5;
@@ -262,21 +264,31 @@
             // textBox1
             // 
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Location = new System.Drawing.Point(532, 418);
+            this.textBox1.Location = new System.Drawing.Point(510, 414);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(288, 26);
             this.textBox1.TabIndex = 6;
             this.textBox1.Text = " ";
-            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // lblProduct
             // 
             this.lblProduct.AutoSize = true;
-            this.lblProduct.Location = new System.Drawing.Point(458, 418);
+            this.lblProduct.Location = new System.Drawing.Point(436, 414);
             this.lblProduct.Name = "lblProduct";
             this.lblProduct.Size = new System.Drawing.Size(68, 20);
             this.lblProduct.TabIndex = 7;
             this.lblProduct.Text = "Product:";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::BarnCaseApi.Properties.Resources.arrow_right;
+            this.pictureBox1.Location = new System.Drawing.Point(887, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(67, 33);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // FarmManagement
             // 
@@ -297,12 +309,13 @@
             this.MaximizeBox = false;
             this.Name = "FarmManagement";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "FarmManagement";
+            this.Text = "  FarmManagement";
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.grpAnimals.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -333,5 +346,6 @@
         private System.Windows.Forms.ColumnHeader Gender;
         private System.Windows.Forms.ColumnHeader AnimalName;
         private System.Windows.Forms.ColumnHeader Price;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

@@ -1,92 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BarnCaseApi
 {
     public partial class Production : Form
     {
-        private Timer productiontimer;
-        private int progressValue = 0;
-        private int progressMax = 0;
-        private SimpleAnimal animal;
+        private List<FarmManagement.SimpleAnimal> farmAnimals;
+        private FarmManagement mainForm;
+        public readonly CultureInfo dollarCulture = CultureInfo.GetCultureInfo("en-US");
+        private Timer cowTimer = new Timer();
+        private Timer sheepTimer = new Timer();
+        private Timer chickenTimer = new Timer();
 
-        private int Milk = 0;
-        private int Wool = 0;
-        private int Eggs = 0;
-
-        public List<FarmManagement.SimpleAnimal> Animals { get; set; }
-        public decimal Balance { get; set; }
-        private CultureInfo dollarCulture = CultureInfo.GetCultureInfo("en-US");
-
-        public Production(List<FarmManagement.SimpleAnimal> animals, decimal balance)
+        public Production(List<FarmManagement.SimpleAnimal> animals, FarmManagement mainForm)
         {
             InitializeComponent();
-            Balance = balance;
-            Animals = animals;
 
-            productiontimer = new Timer();
-            productiontimer.Interval = 100;
-            productiontimer.Tick += ProductionTimer_Tick;
-            productiontimer.Start();
+            this.farmAnimals = animals;
+            this.mainForm = mainForm;
+
+            cowTimer.Interval = 1000;
+            sheepTimer.Interval = 1000;
+            chickenTimer.Interval = 1000;
+
+            cowTimer.Tick += CowTimer_Tick;
+            sheepTimer.Tick += SheepTimer_Tick;
+            chickenTimer.Tick += ChickenTimer_Tick;
+
+            UpdateButtons();
+            UpdateMoneyLabel();  
         }
-        private void ProductionTimer_Tick(object sender, EventArgs e)
+
+        private void UpdateButtons()
         {
-            progressValue++;
+            bool cowExists = farmAnimals.Any(a => a.Type == "Cow");
+            bool sheepExists = farmAnimals.Any(a => a.Type == "Sheep");
+            bool chickenExists = farmAnimals.Any(a => a.Type == "Chicken");
 
-            if (progressValue > progressMax) progressValue = 0;
-            {
-                progressBar1.Value = progressValue++;
-            }
-            if (progressValue == progressMax)
-            {
-                ProduceProducts();
-            }
+            btnCow.Enabled = cowExists;
+            btnSheep.Enabled = sheepExists;
+            btnChicken.Enabled = chickenExists;
         }
-        private void ProduceProducts()
+
+        private void UpdateMoneyLabel()   
         {
-            foreach (var animal in Animals);
-            {
-                string type = animal.Type.ToLower();
-                if (type == "cow") Milk++;
-                else if (type == "Sheep") Wool++;
-                else if (type == "Chicken") Eggs++;
-            }
-            lblMilk.Text = "Milk" + Milk;
-            lblWool.Text = "Wool" + Wool;
-            lblEggs.Text = "Eggs" + Eggs;
+            lblMoney.Text = "Cash: " + mainForm.GetMoney().ToString("C", dollarCulture);
         }
-        private void btnSellProducts_Click(object sender, EventArgs e)
+
+        private void btnCow_Click(object sender, EventArgs e)
         {
-            int total = (Milk * 5)+(Wool * 8 )+(Eggs * 2);
-
-            Milk = 0;
-            Wool = 0;
-            Eggs = 0;
-
-            lblMilk.Text = "Milk: 0";
-            lblWool.Text = "Wool: 0";
-            lblEggs.Text = "Eggs: 0";
-
-            MessageBox.Show("All products sold for $"+ total);
+            progressCow.Value = 0;
+            cowTimer.Start();
         }
-    }
 
-    public class SimpleAnimal
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public int Age { get; set; }
-        public string Gender { get; set; }
-        public decimal Price { get; set; }
-        public string DeathCause { get; set; }
+        private void CowTimer_Tick(object sender, EventArgs e)
+        {
+            if (progressCow.Value < 100)
+            {
+                progressCow.Value += 10;
+            }
+            else
+            {
+                cowTimer.Stop();
+                mainForm.SetMoney(mainForm.GetMoney() + 15);
+                UpdateMoneyLabel();   
+                MessageBox.Show("Cow produced Milk (+$15)");
+            }
+        }
+
+        private void btnSheep_Click(object sender, EventArgs e)
+        {
+            progressSheep.Value = 0;
+            sheepTimer.Start();
+        }
+
+        private void SheepTimer_Tick(object sender, EventArgs e)
+        {
+            if (progressSheep.Value < 100)
+            {
+                progressSheep.Value += 10;
+            }
+            else
+            {
+                sheepTimer.Stop();
+                mainForm.SetMoney(mainForm.GetMoney() + 25);
+                UpdateMoneyLabel(); 
+                MessageBox.Show("Sheep produced Wool (+$25)");
+            }
+        }
+
+        private void btnChicken_Click(object sender, EventArgs e)
+        {
+            progressChicken.Value = 0;
+            chickenTimer.Start();
+        }
+
+        private void ChickenTimer_Tick(object sender, EventArgs e)
+        {
+            if (progressChicken.Value < 100)
+            {
+                progressChicken.Value += 20;
+            }
+            else
+            {
+                chickenTimer.Stop();
+                mainForm.SetMoney(mainForm.GetMoney() + 5);
+                UpdateMoneyLabel(); 
+                MessageBox.Show("Chicken laid Eggs (+$5)");
+            }
+        }
+
+        private void PicToLogin_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            mainForm.Show();
+        }
     }
 }
